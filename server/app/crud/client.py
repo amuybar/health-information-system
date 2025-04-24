@@ -1,3 +1,4 @@
+#type: ignore
 from sqlalchemy.orm import Session
 from uuid import UUID
 from app.schemas.client import ClientCreate
@@ -72,3 +73,37 @@ def get_client_with_programs(db: Session, client_id: UUID) -> Client:
         Client: The client record with related programs if found, else None.
     """
     return db.query(Client).filter(Client.id == client_id).first()
+
+
+def get_client_by_program(db: Session, program_id: UUID) -> list[Client]:
+    """
+    Retrieve clients enrolled in a specific program.
+
+    Args:
+        db (Session): Database session.
+        program_id (UUID): Unique identifier of the program.
+
+    Returns:
+        list[Client]: List of clients enrolled in the specified program.
+    """
+    return db.query(Client).filter(Client.programs.any(id=program_id)).all()
+
+
+def update_client(db: Session, client_id: UUID, client_data: ClientCreate) -> Client:
+    """
+    Update an existing client in the database.
+    Args:
+        db (Session): Database session.
+        client_id (UUID): Unique identifier of the client to update.
+        client_data (ClientCreate): Updated data for the client.
+        
+    Returns:
+        Client: The updated client record.
+    """
+    db_client = db.query(Client).filter(Client.id == client_id).first()
+    if db_client:
+        for key, value in client_data.dict().items():
+            setattr(db_client, key, value)
+        db.commit()
+        db.refresh(db_client)
+    return db_client
