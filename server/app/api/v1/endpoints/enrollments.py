@@ -1,15 +1,21 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from app.schemas.client import ClientOut
 from app.schemas.enrollment import EnrollmentCreate, EnrollmentOut
 from app.crud import enrollment as enrollment_crud
 from app.dependencies import get_db
 
 router = APIRouter()
 
+
 @router.post("/", response_model=EnrollmentOut)
-def enroll_client(enrollment: EnrollmentCreate, db: Session = Depends(get_db)):
+def enroll_client(
+    enrollment: EnrollmentCreate,
+    db: Session = Depends(get_db)
+) -> EnrollmentOut:
     """
-    API endpoint to enroll a client in a program.
+    Enroll a client in a program.
 
     Args:
         enrollment (EnrollmentCreate): Enrollment data containing client_id and program_id.
@@ -20,15 +26,38 @@ def enroll_client(enrollment: EnrollmentCreate, db: Session = Depends(get_db)):
     """
     return enrollment_crud.enroll_client_in_program(db, enrollment)
 
-@router.get("/", response_model=list[EnrollmentOut])
-def get_enrollments_for_client(db: Session = Depends(get_db), client_id: str = None):
+
+@router.get("/clients/{client_id}/programs", response_model=list[EnrollmentOut])
+def get_enrollments_for_client(
+    client_id: UUID,
+    db: Session = Depends(get_db)
+) -> list[EnrollmentOut]:
     """
-    API endpoint to retrieve all enrollments.
+    Retrieve all enrollments for a specific client.
 
     Args:
+        client_id (UUID): Unique identifier of the client.
         db (Session): Database session (provided by dependency injection).
 
     Returns:
-        list[EnrollmentOut]: List of all enrollment records.
+        list[EnrollmentOut]: List of enrollment records for the client.
     """
     return enrollment_crud.get_enrollments_for_client(db, client_id)
+
+
+@router.get("/programs/{program_id}/clients", response_model=list[ClientOut])
+def get_clients_in_program(
+    program_id: UUID,
+    db: Session = Depends(get_db)
+) -> list[ClientOut]:
+    """
+    Retrieve all clients enrolled in a specific program.
+
+    Args:
+        program_id (UUID): Unique identifier of the program.
+        db (Session): Database session (provided by dependency injection).
+
+    Returns:
+        list[ClientOut]: List of clients enrolled in the program.
+    """
+    return enrollment_crud.get_clients_in_program(db, program_id)
