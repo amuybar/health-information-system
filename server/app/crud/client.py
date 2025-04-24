@@ -58,7 +58,7 @@ def search_clients_by_name(db: Session, name_query: str) -> list[Client]:
     Returns:
         list[Client]: List of matching client records.
     """
-    return db.query(Client).filter(Client.name.ilike(f"%{name_query}%")).all()
+    return db.query(Client).filter(Client.full_name.ilike(f"%{name_query}%")).all()
 
 def get_client_with_programs(db: Session, client_id: UUID) -> Client:
     """

@@ -25,4 +25,4 @@ class Client(Base):
     
      # __repr__ method for better representation when printing objects
     def __repr__(self):
-        return f"<Client(id={self.id}, name='{self.name}', email='{self.email}')>"
+        return f"<Client(id={self.id}, name='{self.full_name}', email='{self.email}')>"

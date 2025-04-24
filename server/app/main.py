@@ -1,71 +1,63 @@
-from fastapi import FastAPI, Depends, HTTPException
+# type: ignore
+from fastapi import FastAPI
 from sqlalchemy.orm import Session
-from .core.database import engine
-from .dependencies import get_db
-from .models.client import Client
-from .core.database import Base
+from .core.database import engine, Base
+from app.api.v1.endpoints import clients, programs, enrollments
+import logging
 
-# Initialize FastAPI application
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def initialize_database():
+    """
+    Initialize database tables on application startup.
+    Ensures all tables defined in SQLAlchemy models are created.
+    """
+    logger.info("Creating database tables...")
+    Base.metadata.create_all(bind=engine)
+    logger.info("Database tables created successfully.")
+
+# Initialize FastAPI application with metadata for documentation
 app = FastAPI(
     title="Health Information System API",
     description="API for managing health information data",
-    version="1.0.0"
+    version="1.0.0",
+    openapi_tags=[
+        {"name": "Clients", "description": "Manage client data"},
+        {"name": "Programs", "description": "Manage health programs"},
+        {"name": "Enrollments", "description": "Client enrollment in programs"},
+        {"name": "Status", "description": "Health/status checks"}
+    ]
 )
 
-def initialize_database():
-    """Initialize database tables on application startup."""
-    print("Creating database tables...")
-    Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully.")
-
 @app.on_event("startup")
-async def startup_event():
-    """Initialize application services on startup."""
+async def on_startup():
+    """
+    FastAPI startup event handler.
+    Initializes database tables and other startup routines.
+    """
     initialize_database()
 
 @app.get("/", tags=["Root"])
 async def root():
-    """Root endpoint that returns a welcome message."""
+    """
+    Root endpoint that returns a welcome message and API status.
+
+    Returns:
+        dict: Welcome message, documentation link, and status.
+    """
     return {
         "message": "Welcome to the Health Information System API",
         "documentation": "/docs",
         "status": "operational"
     }
 
-@app.get("/health", tags=["Status"])
-async def health_check():
-    """Basic health check endpoint."""
-    return {"status": "healthy"}
 
-@app.get("/test-db", tags=["Database"])
-async def test_database_connection(db: Session = Depends(get_db)):
-    """
-    Test database connection and verify basic functionality.
-    
-    Returns:
-        - Success message with first client ID if exists
-        - Success message if table is empty
-        - Error message if connection fails
-    """
-    try:
-        first_client = db.query(Client).first()
-        
-        if first_client:
-            return {
-                "status": "success",
-                "message": "Database connection successful",
-                "data": {"first_client_id": first_client.id}
-            }
-        return {
-            "status": "success",
-            "message": "Database connection successful (empty table)"
-        }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "status": "error",
-                "message": "Database connection failed",
-                "error": str(e)
-            }
-        )
+# Include API routers for versioned endpoints
+
+app.include_router(clients.router, prefix="/api/v1/clients", tags=["Clients"])
+
+app.include_router(programs.router, prefix="/api/v1/programs", tags=["Programs"])
+
+app.include_router(enrollments.router, prefix="/api/v1/enrollments", tags=["Enrollments"])
