@@ -11,7 +11,14 @@ export interface Client {
     created_at: string;
     enrolled_programs?: Program[];
   }
+  export interface ClientProgram{
+      id: string;
+      name: string;
+      description: string;
+      created_at: string;
+      end_date?: string;
   
+  }
   export interface ClientCreate {
     full_name: string;
     age: number;

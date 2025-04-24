@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Program, Client } from "../types";
 import { getProgramById, deleteProgram } from "../services/proramService";
-import { getClientsByProgram } from "../services/clientService";
 import ClientCard from "../components/ClientCard";
+import { getClientsInProgram } from "../services/enrollmentService";
 
 export default function ProgramDetail() {
   const { id } = useParams();
@@ -18,7 +18,7 @@ export default function ProgramDetail() {
       try {
         setLoading(true);
         const programData = await getProgramById(id!);
-        const clientsData = await getClientsByProgram(id!);
+        const clientsData = await getClientsInProgram(id!);
         setProgram(programData);
         setClients(clientsData);
         setLoading(false);
@@ -130,12 +130,7 @@ export default function ProgramDetail() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Enrolled Clients ({clients.length})</h2>
-            <Link
-              to={`/programs/${program.id}/enroll`}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            >
-              Enroll Client
-            </Link>
+           
           </div>
 
           {clients.length > 0 ? (

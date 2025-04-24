@@ -1,7 +1,8 @@
 from typing import List
 from sqlalchemy.orm import Session
 from app.models.enrollment import Enrollment
-from app.models.client import Client  # Ensure this import exists
+from app.models.client import Client
+from app.models.program import Program
 from app.schemas.enrollment import EnrollmentCreate
 from uuid import UUID
 from datetime import datetime
@@ -41,6 +42,23 @@ def get_enrollments_for_client(db: Session, client_id: UUID) -> List[Enrollment]
         .all()
     )
 
+def get_programs_for_client(db: Session, client_id: UUID) -> List[UUID]:
+    """
+    Get all programs for a specific client.
+
+    Args:
+        db (Session): Database session.
+        client_id (UUID): Unique identifier of the client.
+
+    Returns:
+        List[UUID]: List of program IDs the client is enrolled in.
+    """
+    return (
+        db.query(Program)
+        .join(Enrollment, Program.id == Enrollment.program_id)
+        .filter(Enrollment.client_id == client_id)
+        .all()
+    )
 
 def get_clients_in_program(db: Session, program_id: UUID) -> List[Client]:
     """

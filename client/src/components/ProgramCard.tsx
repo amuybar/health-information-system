@@ -7,12 +7,23 @@ export default function ProgramCard({ program }: { program: Program }) {
       <h2 className="text-xl font-semibold mb-2">{program.name}</h2>
       <p className="text-gray-600 mb-4 line-clamp-2">{program.description}</p>
       <div className="flex justify-between items-center">
-        <span className="text-sm text-gray-500">
-          {program.clients?.length || 0} clients
-        </span>
+        
         <Link
           to={`/programs/${program.id}`}
-          className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm"
+          className="bg-gray-200
+        border-2 border-white
+        text-black
+        px-5 py-1.5
+        rounded
+        font-sans
+        text-[15px]
+        shadow-inner
+        active:border-gray-400
+        active:shadow-none
+        cursor-pointer
+        font-normal
+        outline-none
+        border-outset"
         >
           View Details
         </Link>

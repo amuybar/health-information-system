@@ -1,5 +1,6 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends
+from app.schemas.program import ProgramOut
 from sqlalchemy.orm import Session
 from app.schemas.client import ClientOut
 from app.schemas.enrollment import EnrollmentCreate, EnrollmentOut
@@ -27,22 +28,22 @@ def enroll_client(
     return enrollment_crud.enroll_client_in_program(db, enrollment)
 
 
-@router.get("/clients/{client_id}/programs", response_model=list[EnrollmentOut])
-def get_enrollments_for_client(
+@router.get("/clients/{client_id}/programs", response_model=list[ProgramOut])
+def get_programs_for_client(
     client_id: UUID,
     db: Session = Depends(get_db)
-) -> list[EnrollmentOut]:
+) -> list[ProgramOut]:
     """
-    Retrieve all enrollments for a specific client.
+    Retrieve all programs for a specific client.
 
     Args:
         client_id (UUID): Unique identifier of the client.
         db (Session): Database session (provided by dependency injection).
 
     Returns:
-        list[EnrollmentOut]: List of enrollment records for the client.
+        list: List of programs the client is enrolled in.
     """
-    return enrollment_crud.get_enrollments_for_client(db, client_id)
+    return enrollment_crud.get_programs_for_client(db, client_id)
 
 
 @router.get("/programs/{program_id}/clients", response_model=list[ClientOut])

@@ -1,33 +1,51 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Client } from "../types";
+import { Client, ClientProgram } from "../types";
 import { getClient } from "../services/clientService";
+import { getProgramForClients } from "../services/enrollmentService";
+import Button from "../components/Button";
 
 export default function ClientProfile() {
     const { id } = useParams();
     const [client, setClient] = useState<Client | null>(null);
+    const [enrollments, setEnrollments] = useState<ClientProgram[] | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const printRef = useRef<HTMLDivElement>(null);
 
+    // Fetch client data
     useEffect(() => {
-        setLoading(true);
-        getClient(id as string)
-            .then((data) => {
-                setClient(data);
-                setLoading(false);
-            })
-            .catch((err) => {
+        async function loadClientData() {
+            try {
+                setLoading(true);
+                const clientData = await getClient(id as string);
+                setClient(clientData);
+
+                // Fetch enrollments once we have the client
+                try {
+                    const enrollmentData = await getProgramForClients(clientData.id);
+                    setEnrollments(enrollmentData);
+                } catch (err) {
+                    console.error("Failed to load enrolled programs:", err);
+                    setError("Failed to load enrolled programs");
+                }
+            } catch (err) {
+                console.error("Failed to load client profile:", err);
                 setError("Failed to load client profile");
+            } finally {
                 setLoading(false);
-                console.error(err);
-            });
+            }
+        }
+
+        loadClientData();
     }, [id]);
 
     const handlePrint = () => {
         if (!printRef.current) return;
+
         const printContents = printRef.current.innerHTML;
         const printWindow = window.open("", "_blank", "width=800,height=600");
+
         if (printWindow) {
             printWindow.document.write(`
                 <html>
@@ -64,6 +82,7 @@ export default function ClientProfile() {
         }
     };
 
+    // Loading state
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 p-4">
@@ -79,6 +98,7 @@ export default function ClientProfile() {
         );
     }
 
+    // Error state
     if (error || !client) {
         return (
             <div className="min-h-screen bg-gray-50 p-4">
@@ -92,23 +112,31 @@ export default function ClientProfile() {
         );
     }
 
+    // Client profile view
     return (
         <div className="min-h-screen bg-gray-50 p-4">
             <div className="max-w-3xl mx-auto">
+                {/* Navigation and actions */}
                 <div className="mb-4 flex items-center justify-between">
-                    <Link to="/clients" className="text-blue-500 hover:underline">
-                        &larr; Back to Clients
-                    </Link>
-                    <button
-                        onClick={handlePrint}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    <Link
+                        to="/clients"
+                        className="px-3 py-1 bg-white text-black font-mono border border-grey-50 rounded shadow "
+                        
                     >
-                        Print
-                    </button>
+                        &#x25C0; Back to Clients
+                    </Link>
+                    <Button
+                        onClick={handlePrint} text={"Print"}                        
+                    />
                 </div>
+
+                {/* Printable content */}
                 <div ref={printRef}>
                     <div className="bg-white border rounded p-6">
+                        {/* Client header */}
                         <h1 className="text-2xl font-bold mb-4">{client.full_name}</h1>
+
+                        {/* Client details */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <div>
                                 <p><span className="font-medium">ID:</span> {client.id}</p>
@@ -120,28 +148,41 @@ export default function ClientProfile() {
                                 <p><span className="font-medium">Registration Date:</span> {new Date(client.created_at).toLocaleDateString()}</p>
                             </div>
                         </div>
+
+                        {/* Enrolled programs section */}
                         <div className="mb-6">
                             <h2 className="text-xl font-bold mb-2">Enrolled Programs</h2>
-                            {client.enrolled_programs && client.enrolled_programs.length > 0 ? (
+
+                            {!enrollments && (
+                                <p className="text-gray-600">Loading enrolled programs...</p>
+                            )}
+
+                            {enrollments && enrollments.length === 0 && (
+                                <p className="text-gray-600">Not enrolled in any programs</p>
+                            )}
+
+                            {enrollments && enrollments.length > 0 && (
                                 <div className="border rounded">
-                                    {client.enrolled_programs.map((program, index) => (
-                                        <div 
-                                            key={program.id} 
-                                            className={`p-3 ${index !== (client.enrolled_programs?.length ?? 0) - 1 ? 'border-b' : ''}`}
+                                    {enrollments.map((enrollment, index) => (
+                                        <div
+                                            key={enrollment.id}
+                                            className={`p-3 ${index !== enrollments.length - 1 ? 'border-b' : ''}`}
                                         >
-                                            <p className="font-medium">{program.name}</p>
+                                            <p className="font-medium">{enrollment.name}</p>
                                             <p className="text-sm text-gray-600">
-                                                {program.startDate && new Date(program.startDate).toLocaleDateString()} - 
-                                                {program.endDate ? new Date(program.endDate).toLocaleDateString() : 'Ongoing'}
+                                                {enrollment.created_at && new Date(enrollment.created_at).toLocaleDateString()} -
+                                                {enrollment.end_date ? new Date(enrollment.end_date).toLocaleDateString() : 'Ongoing'}
                                             </p>
-                                            {program.description && <p className="text-sm mt-1">{program.description}</p>}
+                                            {enrollment.description && (
+                                                <p className="text-sm mt-1">{enrollment.description}</p>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
-                            ) : (
-                                <p className="text-gray-600">Not enrolled in any programs</p>
                             )}
                         </div>
+
+                        {/* Notes section */}
                         <div>
                             <h2 className="text-xl font-bold mb-2">Notes</h2>
                             <p className="border p-3 rounded bg-gray-50">

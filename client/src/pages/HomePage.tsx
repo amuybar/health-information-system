@@ -66,12 +66,6 @@ export default function Home() {
                 ENROLL CLIENT INTO PROGRAM
               </Link>
             </li>
-            <li>
-              <Link to="/enrollments" className="hover:underline flex items-center">
-                <span className="mr-2">▸</span>
-                VIEW ALL ENROLLMENTS
-              </Link>
-            </li>
           </ul>
         </div>
       </div>
