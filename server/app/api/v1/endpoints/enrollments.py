@@ -19,3 +19,16 @@ def enroll_client(enrollment: EnrollmentCreate, db: Session = Depends(get_db)):
         EnrollmentOut: The newly created enrollment record.
     """
     return enrollment_crud.enroll_client_in_program(db, enrollment)
+
+@router.get("/", response_model=list[EnrollmentOut])
+def get_enrollments_for_client(db: Session = Depends(get_db), client_id: str = None):
+    """
+    API endpoint to retrieve all enrollments.
+
+    Args:
+        db (Session): Database session (provided by dependency injection).
+
+    Returns:
+        list[EnrollmentOut]: List of all enrollment records.
+    """
+    return enrollment_crud.get_enrollments_for_client(db, client_id)
