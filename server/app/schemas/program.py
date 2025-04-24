@@ -16,7 +16,6 @@ class ProgramBase(BaseModel):
     """
     name: str
     description: Optional[str] = None
-    start_date: datetime
     end_date: Optional[datetime] = None
 
 class ProgramCreate(ProgramBase):
