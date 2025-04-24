@@ -48,7 +48,7 @@ def get_all_programs(db: Session) -> List[Program]:
     """
     return db.query(Program).all()
 
-def update_program(db:Seesion, program_id: UUID, program: ProgramCreate) -> Program:
+def update_program(db:Session, program_id: UUID, program: ProgramCreate) -> Program:
     """
     Update an existing program in the database.
 

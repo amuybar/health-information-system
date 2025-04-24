@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import List, Optional
 from .program import ProgramOut
 
+
 class ClientBase(BaseModel):
     """
     Base schema for a client.
@@ -14,12 +15,20 @@ class ClientBase(BaseModel):
         age (int): Age of the client.
         gender (str): Gender of the client.
         email (EmailStr): Email address of the client.
+        phone_number (Optional[str]): Phone number of the client.
+        address (Optional[str]): Address of the client.
+        notes (Optional[str]): Additional notes.
+        status (str): Status of the client.
     """
     full_name: str
     age: int
     gender: str
     email: EmailStr
-    
+    phone_number: Optional[str] = None
+    address: Optional[str] = None
+    notes: Optional[str] = None
+    status: str = "active"
+
 class ClientCreate(ClientBase):
     """
     Schema for creating a new client.

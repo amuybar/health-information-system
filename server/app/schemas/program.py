@@ -2,6 +2,7 @@
 from pydantic import BaseModel
 from uuid import UUID
 from datetime import datetime
+from typing import Optional
 
 class ProgramBase(BaseModel):
     """
@@ -9,10 +10,14 @@ class ProgramBase(BaseModel):
 
     Attributes:
         name (str): Name of the program.
-        description (str): Description of the program.
+        description (Optional[str]): Description of the program.
+        start_date (datetime): Start date of the program.
+        end_date (Optional[datetime]): End date of the program.
     """
     name: str
-    description: str
+    description: Optional[str] = None
+    start_date: datetime
+    end_date: Optional[datetime] = None
 
 class ProgramCreate(ProgramBase):
     """
@@ -28,9 +33,11 @@ class ProgramOut(ProgramBase):
     Attributes:
         id (UUID): Unique identifier for the program.
         created_at (datetime): Timestamp when the program was created.
+        updated_at (datetime): Timestamp when the program was last updated.
     """
     id: UUID
     created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True  # Enables compatibility with ORM objects
