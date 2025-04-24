@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from .core.database import engine, Base
 from app.api.v1.endpoints import clients, programs, enrollments
 import logging
+from fastapi.middleware.cors import CORSMiddleware
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +30,19 @@ app = FastAPI(
         {"name": "Enrollments", "description": "Client enrollment in programs"},
         {"name": "Status", "description": "Health/status checks"}
     ]
+)
+
+# Configure CORS middleware to allow requests from specified origins
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost",
+        "http://localhost:5173", 
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
 )
 
 @app.on_event("startup")
