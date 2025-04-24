@@ -18,7 +18,7 @@ A simple, modular full-stack application that simulates a basic health informati
 ## 🏗️ Tech Stack
 
 - **Backend:** FastAPI, SQLAlchemy, Pydantic
-- **Frontend:** React + TypeScript (coming soon)
+- **Frontend:** React + TypeScript 
 - **Database:** SQLite (for demo) or PostgreSQL
 - **Dev Tools:** Uvicorn, dotenv
 
