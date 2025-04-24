@@ -17,6 +17,10 @@ export interface Client {
     age: number;
     gender: string;
     email: string;
+    phone_number?: string;
+    address?: string;
+    notes?: string;
+    status: string;
   }
   
   export interface Program {

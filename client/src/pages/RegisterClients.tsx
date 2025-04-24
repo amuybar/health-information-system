@@ -10,6 +10,10 @@ export default function RegisterClient() {
     age: 0,
     gender: "",
     email: "",
+    phone_number: "",
+    address: "",
+    notes: "",
+    status: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -78,6 +82,11 @@ export default function RegisterClient() {
         age: 0,
         gender: "",
         email: "",
+        phone_number: "",
+        address: "",
+        notes: "",
+        status: "",
+        
       });
     } catch (error) {
       setErrors({ form: "Failed to register client. Please try again." });
@@ -139,65 +148,126 @@ export default function RegisterClient() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <FormInput
-            label="Full Name"
-            type="text"
-            name="full_name"
-            value={formData.full_name}
-            onChange={handleChange}
-            onBlur={handleBlur}
+        label="Full Name"
+        type="text"
+        name="full_name"
+        value={formData.full_name}
+        onChange={handleChange}
+        onBlur={handleBlur}
           />
           {errors.full_name && (
-            <p className="text-sm mt-1">{errors.full_name}</p>
+        <p className="text-sm mt-1">{errors.full_name}</p>
           )}
         </div>
         
         <div>
           <FormInput
-            label="Email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
+        label="Email"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        onBlur={handleBlur}
           />
           {errors.email && (
-            <p className="text-sm mt-1">{errors.email}</p>
+        <p className="text-sm mt-1">{errors.email}</p>
           )}
         </div>
         
         <div>
           <FormInput
-            label="Age"
-            type="number"
-            name="age"
-            value={formData.age || ""}
-            onChange={handleChange}
-            onBlur={handleBlur}
-           
+        label="Phone Number"
+        type="tel"
+        name="phone_number"
+        value={formData.phone_number || ""}
+        onChange={handleChange}
+        onBlur={handleBlur}
+          />
+          {errors.phone_number && (
+        <p className="text-sm mt-1">{errors.phone_number}</p>
+          )}
+        </div>
+
+        <div>
+          <FormInput
+        label="Address"
+        type="text"
+        name="address"
+        value={formData.address || ""}
+        onChange={handleChange}
+        onBlur={handleBlur}
+          />
+          {errors.address && (
+        <p className="text-sm mt-1">{errors.address}</p>
+          )}
+        </div>
+
+        <div>
+          <FormInput
+        label="Age"
+        type="number"
+        name="age"
+        value={formData.age || ""}
+        onChange={handleChange}
+        onBlur={handleBlur}
           />
           {errors.age && (
-            <p className="text-sm mt-1">{errors.age}</p>
+        <p className="text-sm mt-1">{errors.age}</p>
           )}
         </div>
         
         <div>
           <label className="block mb-1">Gender</label>
           <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className="w-full border border-black px-2 py-1"
-            required
+        name="gender"
+        value={formData.gender}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className="w-full border border-black px-2 py-1"
+        required
           >
-            <option value="">-- Select Gender --</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-            <option value="Prefer not to say">Prefer not to say</option>
+        <option value="">-- Select Gender --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+        <option value="Prefer not to say">Prefer not to say</option>
           </select>
           {errors.gender && (
-            <p className="text-sm mt-1">{errors.gender}</p>
+        <p className="text-sm mt-1">{errors.gender}</p>
+          )}
+        </div>
+
+        <div>
+          <FormInput
+        label="Notes"
+        type="text"
+        name="notes"
+        value={formData.notes || ""}
+        onChange={handleChange}
+        onBlur={handleBlur}
+          />
+          {errors.notes && (
+        <p className="text-sm mt-1">{errors.notes}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block mb-1">Status</label>
+          <select
+        name="status"
+        value={formData.status || ""}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className="w-full border border-black px-2 py-1"
+        required
+          >
+        <option value="">-- Select Status --</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+        <option value="Pending">Pending</option>
+          </select>
+          {errors.status && (
+        <p className="text-sm mt-1">{errors.status}</p>
           )}
         </div>
 
