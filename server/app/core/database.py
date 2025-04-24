@@ -14,7 +14,7 @@ load_dotenv()
 # Retrieve the database URL from environment variables.
 # It defaults to a SQLite database file named 'healthinfo.db' in the current directory
 # if the DATABASE_URL environment variable is not set.
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///:memory:")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./healthinfo.db")
 
 # Create the SQLAlchemy engine.
 # The engine is the source of database connections.
