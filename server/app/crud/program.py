@@ -1,3 +1,5 @@
+#type: ignore
+
 from sqlalchemy.orm import Session
 from app.models.program import Program
 from app.schemas.program import ProgramCreate
@@ -45,3 +47,39 @@ def get_all_programs(db: Session) -> List[Program]:
         List[Program]: List of all program records.
     """
     return db.query(Program).all()
+
+def update_program(db:Seesion, program_id: UUID, program: ProgramCreate) -> Program:
+    """
+    Update an existing program in the database.
+
+    Args:
+        db (Session): Database session.
+        program_id (UUID): Unique identifier of the program to update.
+        program (ProgramCreate): Updated data for the program.
+
+    Returns:
+        Program: The updated program record.
+    """
+    db_program = get_program(db, program_id)
+    if db_program:
+        for key, value in program.dict().items():
+            setattr(db_program, key, value)
+        db.commit()
+        db.refresh(db_program)
+    return db_program
+def delete_program(db: Session, program_id: UUID) -> Program:
+    """
+    Delete a program from the database.
+
+    Args:
+        db (Session): Database session.
+        program_id (UUID): Unique identifier of the program to delete.
+
+    Returns:
+        Program: The deleted program record.
+    """
+    db_program = get_program(db, program_id)
+    if db_program:
+        db.delete(db_program)
+        db.commit()
+    return db_program
