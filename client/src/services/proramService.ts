@@ -10,3 +10,18 @@ export const getPrograms = async () => {
   const res = await api.get<Program[]>("/programs");
   return res.data;
 };
+
+export const updateProgram = async (id: string, program: Program) => {
+  const res = await api.put<Program>(`/programs/${id}`, program);
+  return res.data;
+};
+
+export const getProgramById = async (id: string) => {
+  const res = await api.get<Program>(`/programs/${id}`);
+  return res.data;
+};
+
+export const deleteProgram = async (id: string) => {
+  const res = await api.delete(`/programs/${id}`);
+  return res.data;
+}

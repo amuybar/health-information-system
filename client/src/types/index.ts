@@ -4,6 +4,10 @@ export interface Client {
     age: number;
     gender: string;
     email: string;
+    phone_number?: string;
+    address?: string;
+    notes?: string;
+    status: string;
     created_at: string;
     enrolled_programs?: Program[];
   }
@@ -19,6 +23,9 @@ export interface Client {
     id: string;
     name: string;
     description: string;
+    startDate: string;
+    clients?: Client[];
+    endDate?: string;
     created_at: string;
   }
   
