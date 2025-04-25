@@ -31,3 +31,11 @@ A simple, modular full-stack application that simulates a basic health informati
 
 - [Server (FastAPI) README](./server/README.md)
 - [Client (React) README](./client/README.md)
+
+
+## 🌐 Live Links
+
+- **Frontend App:** [health-information-system-six.vercel.app](https://health-information-system-six.vercel.app/)
+- **Backend API Docs:** [18.206.57.6/docs](https://18.206.57.6/docs)
+
+Explore the live demo using the links above. The frontend provides a user-friendly (OLD SCHOOL) interface, while the backend Swagger docs allow you to interact with the API endpoints directly.
