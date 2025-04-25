@@ -4,6 +4,7 @@ import { Program, Client } from "../types";
 import { getProgramById, deleteProgram } from "../services/proramService";
 import ClientCard from "../components/ClientCard";
 import { getClientsInProgram } from "../services/enrollmentService";
+import Button from "../components/Button";
 
 export default function ProgramDetail() {
   const { id } = useParams();
@@ -100,18 +101,12 @@ export default function ProgramDetail() {
             <p className="text-gray-600 mt-2">{program.description}</p>
           </div>
           <div className="flex space-x-2">
-            <Link
-              to={`/programs/${program.id}/edit`}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Edit
-            </Link>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              Delete
-            </button>
+           
+            <Button
+              onClick={handleDelete} text={"Delete"}              
+            />
+              
+            
           </div>
         </div>
 
