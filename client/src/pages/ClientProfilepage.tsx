@@ -2,8 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Client, ClientProgram } from "../types";
 import { getClient } from "../services/clientService";
-import { getProgramForClients } from "../services/enrollmentService";
 import Button from "../components/Button";
+import { getProgramForClients } from "../services/enrollmentService";
 
 export default function ClientProfile() {
     const { id } = useParams();

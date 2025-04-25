@@ -13,7 +13,11 @@ logger = logging.getLogger(__name__)
 def initialize_database():
     """
     Initialize database tables on application startup.
-    Ensures all tables defined in SQLAlchemy models are created.
+
+    This function creates all tables defined in the SQLAlchemy models
+    by calling Base.metadata.create_all(bind=engine). It is intended
+    to be called during the FastAPI startup event to ensure the database
+    schema is up to date.
     """
     logger.info("Creating database tables...")
     Base.metadata.create_all(bind=engine)
@@ -33,7 +37,6 @@ app = FastAPI(
 )
 
 # Configure CORS middleware to allow requests from specified origins
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -49,7 +52,10 @@ app.add_middleware(
 async def on_startup():
     """
     FastAPI startup event handler.
-    Initializes database tables and other startup routines.
+
+    This function is triggered when the FastAPI application starts.
+    It initializes the database tables and can be extended to include
+    other startup routines as needed.
     """
     initialize_database()
 
@@ -71,7 +77,10 @@ async def root():
 # Include API routers for versioned endpoints
 
 app.include_router(clients.router, prefix="/api/v1/clients", tags=["Clients"])
+"""Clients router: Handles all endpoints related to client management."""
 
 app.include_router(programs.router, prefix="/api/v1/programs", tags=["Programs"])
+"""Programs router: Handles all endpoints related to health programs."""
 
 app.include_router(enrollments.router, prefix="/api/v1/enrollments", tags=["Enrollments"])
+"""Enrollments router: Handles all endpoints related to client enrollments in programs."""
