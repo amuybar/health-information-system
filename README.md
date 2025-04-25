@@ -5,7 +5,7 @@ A simple, modular full-stack application that simulates a basic health informati
 ---
 ## 🎬 Demo
 
-[🎬 Watch Demo Video](demo/demo (online-video-cutter.com).mp4)
+![Demo GIF](demo/demo.gif)
 
 
 ## 📌 Features
