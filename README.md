@@ -35,7 +35,11 @@ A simple, modular full-stack application that simulates a basic health informati
 
 ## 🌐 Live Links
 
-- **Frontend App:** [health-information-system-six.vercel.app](https://health-information-system-six.vercel.app/)
+> **Note:** Please access the backend API link **first** to complete a security check. Since the backend does not use SSL, it is protected by a firewall that requires initial access. After passing the security check, you can proceed to use the frontend and API documentation links as usual.
+
 - **Backend API Docs:** [18.206.57.6/docs](https://18.206.57.6/docs)
+
+- **Frontend App:** [health-information-system-six.vercel.app](https://health-information-system-six.vercel.app/)
+
 
 Explore the live demo using the links above. The frontend provides a user-friendly (OLD SCHOOL) interface, while the backend Swagger docs allow you to interact with the API endpoints directly.
